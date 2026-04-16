@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Infraestructura para app de reservas
+
+Resources:
+
+  MiBucketS3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: crustaceo-reservas-bucket
+
+  MiEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c55b159cbfafe1f0
+      InstanceType: t2.micro
+      KeyName: tu-keypair
+
+      SecurityGroups:
+        - !Ref MiSecurityGroup
+
+  MiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Permitir acceso a la app
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0
+
+# IMPORTANTE:
+# Los Security Groups permiten acceso a los puertos 3000 (frontend)
+# y 5000 (backend). En producción NO se recomienda usar 0.0.0.0/0
+# porque expone la aplicación a todo internet.

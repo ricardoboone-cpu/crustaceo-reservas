@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservas - Crustáceo Cascarudo</title>
+</head>
+<body>
+
+<h1>Reservar mesa 🦀</h1>
+
+<input id="nombre" placeholder="Nombre"><br><br>
+<input id="personas" type="number" placeholder="Personas"><br><br>
+<input id="fecha" placeholder="Fecha"><br><br>
+
+<button onclick="reservar()">Reservar</button>
+
+<script>
+function reservar() {
+  fetch('http://localhost:5000/reservar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nombre: document.getElementById('nombre').value,
+      personas: document.getElementById('personas').value,
+      fecha: document.getElementById('fecha').value
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+</script>
+
+</body>
+</html>
