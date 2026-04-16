@@ -1,16 +1,14 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mongoose = require('mongoose'); // Cambiado de mysql2 a mongoose
 const fs = require('fs');
 const path = require('path');
-const cors = require('cors'); 
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-app.use(cors()); 
+app.use(cors());
 
-let db;
-
-// 📁 LOGS
+// 📁 CONFIGURACIÓN DE LOGS (Se mantiene igual)
 const logDir = path.join(__dirname, 'logs');
 const logPath = path.join(logDir, 'app.log');
 
@@ -23,40 +21,35 @@ function log(message, type = "INFO") {
   fs.appendFileSync(logPath, `[${timestamp}] ${type}: ${message}\n`);
 }
 
-// 🔁 conexión con retry
+// 🧱 MODELO DE DATOS (Equivalente al CREATE TABLE de SQL)
+const ReservaSchema = new mongoose.Schema({
+  nombre: String,
+  personas: Number,
+  fecha: String
+});
+
+const Reserva = mongoose.model('Reserva', ReservaSchema);
+
+// 🔁 CONEXIÓN CON RETRY (Adaptada para MongoDB)
+const mongoURI = process.env.MONGO_URI || 'mongodb://db:27017/reservas_db';
+
 function connectWithRetry() {
-  db = mysql.createConnection({
-    host: 'db',
-    user: 'root',
-    password: 'root',
-    database: 'reservas_db'
-  });
-
-  db.connect((err) => {
-    if (err) {
-      console.log('❌ MySQL no está listo...');
-      log('Error conectando a MySQL', 'ERROR');
+  mongoose.connect(mongoURI)
+    .then(() => {
+      console.log('✅ Conectado a MongoDB');
+      log('Conectado a MongoDB');
+    })
+    .catch((err) => {
+      console.log('❌ MongoDB no está listo, reintentando...');
+      log(`Error conectando a MongoDB: ${err.message}`, 'ERROR');
       setTimeout(connectWithRetry, 3000);
-    } else {
-      console.log('✅ Conectado a MySQL');
-      log('Conectado a MySQL');
-
-      db.query(`
-        CREATE TABLE IF NOT EXISTS reservas (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          nombre VARCHAR(100),
-          personas INT,
-          fecha VARCHAR(50)
-        )
-      `);
-    }
-  });
+    });
 }
 
 connectWithRetry();
 
-// ➕ Crear reserva
-app.post('/reservar', (req, res) => {
+// ➕ Crear reserva (POST)
+app.post('/reservar', async (req, res) => {
   const { nombre, personas, fecha } = req.body;
 
   if (!nombre || !personas || !fecha) {
@@ -64,50 +57,44 @@ app.post('/reservar', (req, res) => {
     return res.status(400).send('Datos incompletos');
   }
 
-  db.query(
-    'INSERT INTO reservas (nombre, personas, fecha) VALUES (?, ?, ?)',
-    [nombre, personas, fecha],
-    (err) => {
-      if (err) {
-        log(`Error al guardar reserva de ${nombre}`, 'ERROR');
-        return res.status(500).send('Error al guardar');
-      }
-
-      log(`Reserva creada por ${nombre}`);
-      res.send('Reserva realizada');
-    }
-  );
+  try {
+    const nuevaReserva = new Reserva({ nombre, personas, fecha });
+    await nuevaReserva.save();
+    log(`Reserva creada por ${nombre}`);
+    res.send('Reserva realizada');
+  } catch (err) {
+    log(`Error al guardar reserva de ${nombre}`, 'ERROR');
+    res.status(500).send('Error al guardar');
+  }
 });
 
-// 📋 Obtener reservas
-app.get('/reservas', (req, res) => {
-  db.query('SELECT * FROM reservas', (err, results) => {
-    if (err) {
-      log('Error al obtener reservas', 'ERROR');
-      return res.status(500).send('Error');
-    }
-
+// 📋 Obtener reservas (GET)
+app.get('/reservas', async (req, res) => {
+  try {
+    const results = await Reserva.find(); // Equivalente al SELECT *
     log('Consulta de reservas');
     res.json(results);
-  });
+  } catch (err) {
+    log('Error al obtener reservas', 'ERROR');
+    res.status(500).send('Error');
+  }
 });
 
-// ❌ Eliminar reserva (extra pro)
-app.delete('/reservas/:id', (req, res) => {
+// ❌ Eliminar reserva (DELETE)
+app.delete('/reservas/:id', async (req, res) => {
   const id = req.params.id;
 
-  db.query('DELETE FROM reservas WHERE id = ?', [id], (err) => {
-    if (err) {
-      log(`Error eliminando reserva ${id}`, 'ERROR');
-      return res.status(500).send('Error');
-    }
-
+  try {
+    await Reserva.findByIdAndDelete(id); // Equivalente al DELETE WHERE id = ?
     log(`Reserva ${id} eliminada`);
     res.send('Reserva eliminada');
-  });
+  } catch (err) {
+    log(`Error eliminando reserva ${id}`, 'ERROR');
+    res.status(500).send('Error');
+  }
 });
 
-// 🚀 iniciar servidor
+// 🚀 Iniciar servidor
 app.listen(3000, () => {
   console.log('Backend corriendo en puerto 3000');
   log('Servidor iniciado en puerto 3000');
