@@ -1,25 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Reservas - Crustáceo Cascarudo</title>
+  <title>Crustáceo Cascarudo 🦀</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      margin: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      background: #2a5298;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      color: black;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .delete {
+      background: red;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>Reservar mesa 🦀</h1>
+<h1>🦀 Crustáceo Cascarudo</h1>
 
-<input id="nombre" placeholder="Nombre"><br><br>
-<input id="personas" type="number" placeholder="Personas"><br><br>
-<input id="fecha" placeholder="Fecha"><br><br>
+<div class="card">
+  <h2>Reservar mesa</h2>
 
-<button onclick="reservar()">Reservar</button>
+  <input id="nombre" placeholder="Nombre">
+  <input id="personas" type="number" placeholder="Personas">
+  <input id="fecha" type="date">
+
+  <button onclick="reservar()">Reservar</button>
+  <button onclick="cargarReservas()">Ver reservas</button>
+</div>
+
+<div id="tabla"></div>
 
 <script>
+
+const API = "http://54.204.62.166:5000";
+
 function reservar() {
-  fetch('http://localhost:5000/reservar', {
+  fetch(`${API}/reservar`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       nombre: document.getElementById('nombre').value,
       personas: document.getElementById('personas').value,
@@ -27,8 +97,51 @@ function reservar() {
     })
   })
   .then(res => res.text())
-  .then(data => alert(data));
+  .then(data => {
+    alert(data);
+    cargarReservas();
+  });
 }
+
+function cargarReservas() {
+  fetch(`${API}/reservas`)
+    .then(res => res.json())
+    .then(data => {
+
+      let html = `
+      <h2>Reservas</h2>
+      <table>
+      <tr>
+        <th>Nombre</th>
+        <th>Personas</th>
+        <th>Fecha</th>
+        <th>Acción</th>
+      </tr>`;
+
+      data.forEach(r => {
+        html += `
+        <tr>
+          <td>${r.nombre}</td>
+          <td>${r.personas}</td>
+          <td>${r.fecha}</td>
+          <td>
+            <button class="delete" onclick="eliminar(${r.id})">X</button>
+          </td>
+        </tr>`;
+      });
+
+      html += "</table>";
+      document.getElementById('tabla').innerHTML = html;
+    });
+}
+
+function eliminar(id) {
+  fetch(`${API}/reservas/${id}`, {
+    method: 'DELETE'
+  })
+  .then(() => cargarReservas());
+}
+
 </script>
 
 </body>

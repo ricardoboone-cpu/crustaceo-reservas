@@ -8,16 +8,14 @@ app.use(express.json());
 
 let db;
 
-// 📁 CONFIGURACIÓN DE LOGS
+// 📁 LOGS
 const logDir = path.join(__dirname, 'logs');
 const logPath = path.join(logDir, 'app.log');
 
-// crear carpeta logs si no existe
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-// función de log
 function log(message, type = "INFO") {
   const timestamp = new Date().toISOString();
   fs.appendFileSync(logPath, `[${timestamp}] ${type}: ${message}\n`);
@@ -34,14 +32,13 @@ function connectWithRetry() {
 
   db.connect((err) => {
     if (err) {
-      console.log('❌ MySQL no está listo, reintentando...');
+      console.log('❌ MySQL no está listo...');
       log('Error conectando a MySQL', 'ERROR');
       setTimeout(connectWithRetry, 3000);
     } else {
       console.log('✅ Conectado a MySQL');
       log('Conectado a MySQL');
 
-      // crear tabla si no existe
       db.query(`
         CREATE TABLE IF NOT EXISTS reservas (
           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,9 +53,14 @@ function connectWithRetry() {
 
 connectWithRetry();
 
-// endpoint para crear reserva
+// ➕ Crear reserva
 app.post('/reservar', (req, res) => {
   const { nombre, personas, fecha } = req.body;
+
+  if (!nombre || !personas || !fecha) {
+    log('Datos incompletos', 'ERROR');
+    return res.status(400).send('Datos incompletos');
+  }
 
   db.query(
     'INSERT INTO reservas (nombre, personas, fecha) VALUES (?, ?, ?)',
@@ -66,7 +68,7 @@ app.post('/reservar', (req, res) => {
     (err) => {
       if (err) {
         log(`Error al guardar reserva de ${nombre}`, 'ERROR');
-        return res.status(500).send('Error al guardar reserva');
+        return res.status(500).send('Error al guardar');
       }
 
       log(`Reserva creada por ${nombre}`);
@@ -75,7 +77,7 @@ app.post('/reservar', (req, res) => {
   );
 });
 
-// endpoint para ver reservas
+// 📋 Obtener reservas
 app.get('/reservas', (req, res) => {
   db.query('SELECT * FROM reservas', (err, results) => {
     if (err) {
@@ -88,7 +90,22 @@ app.get('/reservas', (req, res) => {
   });
 });
 
-// iniciar servidor
+// ❌ Eliminar reserva (extra pro)
+app.delete('/reservas/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('DELETE FROM reservas WHERE id = ?', [id], (err) => {
+    if (err) {
+      log(`Error eliminando reserva ${id}`, 'ERROR');
+      return res.status(500).send('Error');
+    }
+
+    log(`Reserva ${id} eliminada`);
+    res.send('Reserva eliminada');
+  });
+});
+
+// 🚀 iniciar servidor
 app.listen(5000, () => {
   console.log('Backend corriendo en puerto 5000');
   log('Servidor iniciado en puerto 5000');
