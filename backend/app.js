@@ -108,7 +108,7 @@ app.delete('/reservas/:id', (req, res) => {
 });
 
 // 🚀 iniciar servidor
-app.listen(5000, () => {
-  console.log('Backend corriendo en puerto 5000');
-  log('Servidor iniciado en puerto 5000');
+app.listen(3000, () => {
+  console.log('Backend corriendo en puerto 3000');
+  log('Servidor iniciado en puerto 3000');
 });

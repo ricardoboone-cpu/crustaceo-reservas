@@ -1,31 +1,36 @@
 version: '3'
 
 services:
-
   db:
     image: mysql:5.7
+    container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: reservas_db
     ports:
-      - "3307:3306"
+      - "27027:3306" # Acceso externo 27027 -> Interno 3306
     volumes:
       - db_data:/var/lib/mysql
+    restart: always
 
   backend:
     build: ./backend
+    container_name: backend_app
     ports:
-      - "5000:5000"
+      - "3000:3000" # Backend ahora en el 3000
     volumes:
       - ./logs:/app/logs
     depends_on:
       - db
+    environment:
+      - DB_HOST=db
     restart: always
 
   frontend:
     build: ./frontend
+    container_name: frontend_app
     ports:
-      - "3000:80"
+      - "8080:80" # Frontend ahora en el 8080
     restart: always
 
 volumes:
