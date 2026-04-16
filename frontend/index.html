@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Crustáceo Cascarudo 🦀</title>
+  <title>Crustaceo Cascarudo </title>
 
   <style>
     body {
@@ -67,7 +67,7 @@
 
 <body>
 
-<h1>🦀 Crustáceo Cascarudo</h1>
+<h1> Crustaceo Cascarudo</h1>
 
 <div class="card">
   <h2>Reservar mesa</h2>
@@ -84,7 +84,11 @@
 
 <script>
 
-const API = "http://3.89.209.129:5000";
+// Detecta si estás en localhost o en una IP externa (EC2)
+const host = window.location.hostname;
+const API = `http://${host}:5000`; 
+
+console.log("Conectando a API en:", API);
 
 function reservar() {
   fetch(`${API}/reservar`, {
