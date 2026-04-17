@@ -2,3 +2,42 @@
 [2026-04-17T17:17:03.379Z] INFO: Conectado a MongoDB
 [2026-04-17T17:17:30.590Z] INFO: Consulta de reservas
 [2026-04-17T17:17:31.460Z] INFO: Consulta de reservas
+[2026-04-17T17:24:25.481Z] INFO: Servidor iniciado en puerto 3000
+[2026-04-17T17:24:25.497Z] INFO: Conectado a MongoDB
+[2026-04-17T17:25:04.892Z] INFO: Consulta de reservas
+[2026-04-17T17:25:05.590Z] INFO: Consulta de reservas
+[2026-04-17T17:25:12.885Z] INFO: Reserva creada por Ricardo
+[2026-04-17T17:25:14.609Z] INFO: Consulta de reservas
+[2026-04-17T17:25:15.730Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:15.741Z] INFO: Consulta de reservas
+[2026-04-17T17:25:17.523Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:17.538Z] INFO: Consulta de reservas
+[2026-04-17T17:25:17.788Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:17.802Z] INFO: Consulta de reservas
+[2026-04-17T17:25:17.954Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:17.965Z] INFO: Consulta de reservas
+[2026-04-17T17:25:18.118Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:18.130Z] INFO: Consulta de reservas
+[2026-04-17T17:25:18.310Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:18.322Z] INFO: Consulta de reservas
+[2026-04-17T17:25:18.420Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:18.432Z] INFO: Consulta de reservas
+[2026-04-17T17:25:18.571Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:18.581Z] INFO: Consulta de reservas
+[2026-04-17T17:25:18.702Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:18.713Z] INFO: Consulta de reservas
+[2026-04-17T17:25:19.519Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:19.531Z] INFO: Consulta de reservas
+[2026-04-17T17:25:19.704Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:19.751Z] INFO: Consulta de reservas
+[2026-04-17T17:25:19.841Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:19.854Z] INFO: Consulta de reservas
+[2026-04-17T17:25:19.998Z] ERROR: Error eliminando reserva undefined
+[2026-04-17T17:25:20.012Z] INFO: Consulta de reservas
+[2026-04-17T17:25:25.168Z] INFO: Consulta de reservas
+[2026-04-17T17:25:26.031Z] INFO: Reserva 69e26cf869900d0d833c9bfa eliminada
+[2026-04-17T17:25:26.040Z] INFO: Consulta de reservas
+[2026-04-17T17:25:36.127Z] INFO: Reserva creada por Ricardo
+[2026-04-17T17:25:37.532Z] INFO: Consulta de reservas
+[2026-04-17T17:25:38.579Z] INFO: Reserva 69e26d1069900d0d833c9c0d eliminada
+[2026-04-17T17:25:38.587Z] INFO: Consulta de reservas

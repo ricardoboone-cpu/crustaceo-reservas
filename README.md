@@ -1,40 +1,60 @@
-\# 🦀 Sistema de Reservas - Crustáceo Cascarudo
+🦀 Sistema de Reservas - Crustáceo Cascarudo
+📌 Descripción
+Aplicación web Full-Stack diseñada para la gestión de reservas en tiempo real. El sistema permite registrar, visualizar y eliminar reservaciones, utilizando una arquitectura moderna basada en microservicios y contenedores.
 
+🏗️ Arquitectura del Sistema
+El proyecto utiliza una arquitectura de tres capas desplegada de forma automatizada:
 
+Usuario → AWS EC2 (Instancia Linux) → Docker Compose
 
-\## 📌 Descripción
+Frontend: Servidor Nginx que entrega una interfaz SPA (Single Page Application).
 
-Aplicación web para realizar reservas en un restaurante.
+Backend: API REST construida en Node.js con Express.
 
+Base de Datos: MongoDB (NoSQL) para persistencia de datos flexible.
 
+⚙️ Tecnologías y DevOps
+Lenguajes: JavaScript (Node.js), HTML5, CSS3.
 
-\## 🏗️ Arquitectura
+Base de Datos: MongoDB & Mongoose (ODM).
 
-Usuario → EC2 → Docker
+Contenedores: Docker & Docker Compose para orquestación local y remota.
 
-\- Frontend (Nginx)
+Cloud (AWS):
 
-\- Backend (Node.js)
+EC2: Hosting de la aplicación.
 
-\- Base de datos (MySQL)
+CloudFormation: Infraestructura como Código (IaC) para el aprovisionamiento.
 
+S3 & Git: Gestión de despliegue y versionamiento.
 
+📁 Estructura del Proyecto
+/frontend: Código de la interfaz de usuario.
 
-\## ⚙️ Tecnologías
+/backend: Lógica de servidor y modelos de datos.
 
-\- Node.js
+/cloudformation: Plantillas para despliegue automatizado en AWS.
 
-\- MySQL
+/logs: Registro de eventos del sistema.
 
-\- Docker
+▶️ Ejecución y Control
+Local (Desarrollo)
+Para levantar el entorno completo en tu máquina local:
 
-\- AWS (EC2, S3, CloudFormation)
+Bash
+docker compose up --build -d
+Automatización (Scripts)
+El proyecto incluye scripts de Bash para facilitar la gestión:
 
+./start_app.sh: Inicia los servicios en modo segundo plano.
 
+./stop_app.sh: Detiene y remueve los contenedores.
 
-\## ▶️ Ejecución local
+./deploy.sh: Script para automatizar el despliegue hacia AWS.
 
-```bash
+¿Qué cambió y por qué?
+MySQL ➔ MongoDB: Ahora reflejamos el uso de una base de datos NoSQL, lo cual es más escalable para aplicaciones web modernas.
 
-docker compose up --build
+Scripts de automatización: Agregamos la mención a los archivos .sh que vimos en tus carpetas; esto demuestra que sabes automatizar tareas (un punto extra en DevOps).
 
+Docker Compose: Cambiamos la descripción de "Docker" a "Orquestación", que suena mucho más técnico para un estudiante de Ingeniería.
