@@ -129,7 +129,7 @@ function cargarReservas() {
           <td>${r.personas}</td>
           <td>${r.fecha}</td>
           <td>
-            <button class="delete" onclick="eliminar(${r.id})">X</button>
+            <button class="delete" onclick="eliminar('${r._id}')">X</button>
           </td>
         </tr>`;
       });
